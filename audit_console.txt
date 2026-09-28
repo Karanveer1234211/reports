@@ -1,0 +1,54 @@
+18:10:29  1,655 walk-forward days | reading 1,486 symbols from the cache
+18:11:02      250/1486 symbols
+18:11:38      500/1486 symbols
+18:12:15      750/1486 symbols
+18:12:53      1000/1486 symbols
+18:13:28      1250/1486 symbols
+
+================================================================================================
+  TRADABILITY AUDIT - engine walk-forward picks, 1,655 days, net of 35 bp
+================================================================================================
+  checks: A vs panel 0.0e+00 | C vs panel 0.0e+00 | A exit-session mismatches 0
+  reproduces earlier runs: A_top3_net_bp_entry_timing +123.14 | C_top3_net_bp_entry_timing +3.48 | ON1_excess_bp_edge_anatomy +136.34 | A_top3_net_bp_here +123.14 | C_top3_net_bp_here +3.48 | ON1_excess_bp_here +136.34
+
+  flag                                                   top-3 picks      market
+  locked at upper band at the signal CLOSE (A can't buy)        39.94%       0.71%
+  close = high and move >= +1.9% (loose)                      40.08%       0.72%
+  T+1 opens at upper band (C can't buy)                       19.42%       0.66%
+    of which T+1 frozen all day                                9.81%       0.10%
+  ETF / non-equity                                             4.15%       2.72%
+  stop exits on a session frozen at the LOWER band (unfillable): A 49/1906 | C 51/2582
+
+  first-overnight excess of the top-3: +136.3 bp. Where it comes from:
+    uc_close    1,983 picks | share of the ON1 excess   89.2% | ON1 flagged   +341.2 bp vs unflagged   +48.3 bp
+    open_uc       964 picks | share of the ON1 excess   57.3% | ON1 flagged   +448.3 bp vs unflagged   +97.1 bp
+    etf           206 picks | share of the ON1 excess    0.8% | ON1 flagged    +38.9 bp vs unflagged  +170.7 bp
+    any         2,216 picks | share of the ON1 excess   91.4% | ON1 flagged   +313.9 bp vs unflagged   +45.5 bp
+  A minus C: mean +119.7 bp | share from flagged picks 80.4% | flagged among the largest 5% 86.3%
+
+  variant                                            top-3 net [95%]        top-3 excess [95%]  replaced
+  A close entry, as tested                    +123.1 [ +97.6,+150.4]    +129.9 [+112.3,+149.2]      0.0%
+  A skip locked-at-close + ETFs  [RULE]        +26.8 [  +2.5, +50.0]     +35.4 [ +21.6, +49.3]     44.0%
+  A skip locked-at-close only                  +27.7 [  +3.1, +50.3]     +35.8 [ +22.0, +49.7]     39.9%
+  A skip ETFs only                            +124.0 [ +98.1,+151.6]    +131.1 [+113.7,+150.5]      4.1%
+  A skip close=high>=+1.9% + ETFs              +26.3 [  +1.9, +49.0]     +34.9 [ +20.8, +48.8]     43.9%
+  C next open, as tested                        +3.5 [ -19.8, +29.7]     +38.8 [ +19.9, +59.8]      0.0%
+  C skip opens-at-upper-band + ETFs            -21.7 [ -42.9,  +0.5]     +12.3 [  -3.3, +28.0]     23.5%
+  C same, unfilled slot = cash                 -17.7 [ -35.5,  +0.2]     +16.3 [  -0.6, +32.7]      4.1%
+  buy everything (same skip): A_orig -6.8 | A_sub -8.7 | A_sub_circuit -8.3 | A_sub_etf -7.1 | A_sub_loose -8.8 | C_orig -35.3 | C_sub -34.0 | C_cash -34.0
+
+  by year, top-3 net bp:
+    A_orig   2020 +157 | 2021 +209 | 2022 +78 | 2023 +121 | 2024 +156 | 2025 +63 | 2026 +61
+    A_sub    2020 +81 | 2021 +71 | 2022 +5 | 2023 +45 | 2024 -2 | 2025 -6 | 2026 -17
+    C_orig   2020 +33 | 2021 +84 | 2022 -30 | 2023 -4 | 2024 +18 | 2025 -50 | 2026 -38
+    C_sub    2020 +7 | 2021 +6 | 2022 -21 | 2023 +11 | 2024 -54 | 2025 -65 | 2026 -40
+
+  most-picked symbols (check for missed ETFs / non-equities; E = treated as ETF):
+    TTML 87, GTLINFRA 51, RTNPOWER 49, MSPL 49, MAFANG E 45, WEBELSOLAR 42, PCJEWELLER 41, 63MOONS 39, APOLLO 36, SUZLON 36, RPOWER 34, URJA 33, 3IINFOLTD 33, OSIAHYPER 32, SUVEN 32, CUPID 32, KIRLFER 31, SKMEGGPROD 30, GREENPOWER 30, AXISCADES 29, PARACABLES 28, NACLIND 27, TANLA 26, SALASAR 26, TARIL 25
+  ETF symbols among the top-3: MAFANG 45, MON100 17, MASPTOP50 14, BANKIETF 11, GOLDIETF 10, AUTOBEES 10, GOLDBEES 10, CPSEETF 9, MAHKTECH 8, PVTBANIETF 8, BANKBEES 8, ICICIB22 8, AUTOIETF 7, PSUBNKBEES 5, MIDCAPIETF 5, SETFGOLD 4, SETFNIF50 3, SILVERIETF 3, MOM100 3, JUNIORBEES 3, MID150BEES 2, NIFTYBEES 2, PHARMABEES 2, ALPL30IETF 2, ITBEES 1, EBBETF0430 1, INFRABEES 1, PSUBNKIETF 1, HEALTHIETF 1, NEXT50IETF 1, NIFTYIETF 1
+
+------------------------------------------------------------------------------------------------
+  RULE: A_sub (skip upper-circuit-locked-at-close + ETFs, take next rank): top-3 net 95% interval above zero
+  RESULT: A_sub top-3 net  +26.8 [  +2.5, +50.0] -> CLOSE EXECUTION STAYS ALIVE
+------------------------------------------------------------------------------------------------
+  files: panel/entry_timing/tradability_audit.json, tradability_flagged_picks.csv
